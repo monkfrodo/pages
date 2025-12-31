@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalho 1-a-1 | Kevin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --text-muted: #6b6b6b;
+            --border: #e0e0e0;
+            --tag-bg: #1a1a1a;
+            --tag-text: #ffffff;
+            --font-mono: 'Space Mono', monospace;
+            --font-hand: 'Caveat', cursive;
+        }
+
+        html {
+            font-size: 15px;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header / Nav */
+        header {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .logo {
+            width: 28px;
+            height: 28px;
+            background: var(--text);
+            color: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            color: var(--text);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem 4rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-bottom: 3rem;
+        }
+
+        .hero-title {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 0.75rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 4px;
+        }
+
+        .hero p {
+            font-size: 0.9rem;
+            line-height: 1.75;
+            color: var(--text-muted);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.01em;
+        }
+
+        .section-title::after {
+            content: "_";
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 3rem;
+        }
+
+        section p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 0.8rem;
+        }
+
+        section p.muted {
+            color: var(--text-muted);
+        }
+
+        section p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Lists */
+        ul {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        ul li {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            padding-left: 1.2rem;
+            position: relative;
+            margin-bottom: 0.4rem;
+        }
+
+        ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--text-muted);
+        }
+
+        ul.nested {
+            margin: 0.5rem 0 0.5rem 1rem;
+        }
+
+        ul.nested li {
+            color: var(--text-muted);
+        }
+
+        /* Highlight Box */
+        .highlight {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 1rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            margin: 1.5rem 0;
+        }
+
+        /* Price */
+        .price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .price-note {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* CTA Button */
+        .cta-btn {
+            display: inline-block;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 0.9rem 1.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            margin: 1.5rem 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .cta-btn:hover {
+            opacity: 0.85;
+            text-decoration: none;
+        }
+
+        /* Observation */
+        .observation {
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        .observation p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .signature {
+            font-family: var(--font-hand);
+            font-size: 2.8rem;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.02em;
+        }
+
+        .footer-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            html {
+                font-size: 14px;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero-title h1 {
+                font-size: 1.3rem;
+            }
+
+            .hero-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main style="padding-top: 4rem;">
+        <section class="hero">
+            <div class="hero-title">
+                <h1>Trabalho direto comigo</h1>
+                <span class="hero-tag">1-a-1_</span>
+            </div>
+            <p>Se você chegou até aqui, essa página é só pra explicar como isso funciona.</p>
+            <p>Sem promessa extra. Sem empolgação forçada.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">o que é</h2>
+            <p>Um trabalho individual, direto ao ponto, pra quem está travado, confuso ou rodando em círculo — e precisa sair com um próximo passo claro.</p>
+            <p class="muted">Não é acompanhamento.<br>Não é processo longo.<br>Não é motivação.</p>
+            <p><strong>É direção.</strong></p>
+        </section>
+
+        <section>
+            <h2 class="section-title">como funciona</h2>
+            <ul>
+                <li>1 conversa 1-a-1 de 90 minutos, comigo</li>
+                <li>Diagnóstico honesto da sua situação atual</li>
+                <li>Clareza imediata sobre:
+                    <ul class="nested">
+                        <li>o que PARAR agora</li>
+                        <li>o que PRIORIZAR</li>
+                        <li>qual ação gera resultado primeiro</li>
+                    </ul>
+                </li>
+                <li>(Opcional) 1 áudio de follow-up em até 48h, se fizer sentido ajustar execução</li>
+            </ul>
+            <p class="muted">Sem roteiro engessado.<br>Sem método mágico.<br>A conversa vai onde precisa ir.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">o que isso não é</h2>
+            <p class="muted">Pra evitar expectativa errada:</p>
+            <ul>
+                <li>Não é mentoria</li>
+                <li>Não é acompanhamento</li>
+                <li>Não é terapia</li>
+                <li>Não é promessa de longo prazo</li>
+            </ul>
+            <p><strong>É uma conversa adulta pra destravar decisão.</strong></p>
+        </section>
+
+        <section>
+            <h2 class="section-title">resultado esperado</h2>
+            <p>Você sai dessa conversa sabendo exatamente:</p>
+            <ul>
+                <li>qual é o próximo passo</li>
+                <li>o que está te fazendo perder tempo</li>
+                <li>o que está te fazendo perder dinheiro</li>
+            </ul>
+            <p class="muted">Nada além disso.<br>E nada floreado.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">pra quem funciona</h2>
+            <ul>
+                <li>Pessoas que já estão tentando vender ou crescer</li>
+                <li>Travadas por excesso de opção ou confusão</li>
+                <li>Que querem clareza rápida, não mais conteúdo</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="section-title">pra quem não é</h2>
+            <ul>
+                <li>Quem quer "aprender"</li>
+                <li>Quem quer acompanhamento longo</li>
+                <li>Quem precisa ser convencido</li>
+            </ul>
+            <p class="muted">Se você está procurando alguém pra te empurrar ou te animar, não é aqui.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">investimento</h2>
+            <p class="price">R$ 2.500 à vista</p>
+            <p class="price-note">Poucas vagas, porque eu faço tudo pessoalmente<br>e não empilho chamadas.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">próximo passo</h2>
+            <p>Se isso fez sentido, o próximo passo é simples.</p>
+            <a href="https://wa.me/5511933404200?text=Quero%20clareza" class="cta-btn">Falar comigo no WhatsApp</a>
+            <p class="muted">Se não fizer, tudo bem também.<br>Você pode fechar essa página agora e seguir como está.</p>
+        </section>
+
+        <div class="observation">
+            <h2 class="section-title">observação final</h2>
+            <p>Isso não resolve tudo.<br>Mas resolve o que está te travando agora.</p>
+            <p>E normalmente isso é o suficiente pra destravar o resto.</p>
+        </div>
+
+        <footer>
+            <div class="signature">Kevin Eger</div>
+            <div class="footer-name">@okevineger | íntegros</div>
+        </footer>
+    </main>
+</body>
+</html>
