@@ -1,0 +1,12 @@
+{
+  "name": "landing-page-editor",
+  "version": "1.0.0",
+  "description": "Editor visual para a landing page trabalho-1a1",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

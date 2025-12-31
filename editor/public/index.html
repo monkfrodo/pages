@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor - Trabalho 1-a-1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .field {
+            margin-bottom: 1rem;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            color: #444;
+        }
+
+        .field input,
+        .field textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .field input:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: #1a1a1a;
+        }
+
+        .field textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .field-hint {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+
+        .list-editor {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 0.5rem;
+        }
+
+        .list-item {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .list-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .list-item input {
+            flex: 1;
+        }
+
+        .list-item .btn-remove {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 0.5rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-add {
+            width: 100%;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: #f0f0f0;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .btn-add:hover {
+            background: #e8e8e8;
+        }
+
+        .status {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        .status.show {
+            opacity: 1;
+        }
+
+        .status.success {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status.loading {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
+
+        .preview-frame {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            border: none;
+            border-left: 1px solid #e0e0e0;
+            background: white;
+            display: none;
+        }
+
+        .preview-mode .container {
+            max-width: 450px;
+            margin-right: 50%;
+        }
+
+        .preview-mode .preview-frame {
+            display: block;
+        }
+
+        @media (max-width: 1200px) {
+            .preview-frame {
+                display: none !important;
+            }
+            .preview-mode .container {
+                max-width: 800px;
+                margin-right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Editor de Página</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="togglePreview()">👁 Preview</button>
+                <button class="btn btn-primary" onclick="save()">💾 Salvar</button>
+                <button class="btn btn-success" onclick="deploy()">🚀 Publicar</button>
+            </div>
+        </header>
+
+        <div id="editor">
+            <!-- Conteúdo carregado dinamicamente -->
+            <p style="text-align: center; color: #888; padding: 2rem;">Carregando...</p>
+        </div>
+    </div>
+
+    <iframe id="preview" class="preview-frame"></iframe>
+
+    <div id="status" class="status"></div>
+
+    <script>
+        let content = null;
+
+        async function loadContent() {
+            try {
+                const res = await fetch('/api/content');
+                content = await res.json();
+                renderEditor();
+            } catch (error) {
+                showStatus('Erro ao carregar conteúdo', 'error');
+            }
+        }
+
+        function renderEditor() {
+            const editor = document.getElementById('editor');
+
+            let html = `
+                <!-- Hero -->
+                <div class="section-card">
+                    <h2>🎯 Hero (Início)</h2>
+                    <div class="field">
+                        <label>Título Principal</label>
+                        <input type="text" id="hero-title" value="${escapeHtml(content.hero.title)}" />
+                    </div>
+                    <div class="field">
+                        <label>Tag</label>
+                        <input type="text" id="hero-tag" value="${escapeHtml(content.hero.tag)}" />
+                    </div>
+                    <div class="field">
+                        <label>Parágrafos de Introdução</label>
+                        <textarea id="hero-paragraphs">${content.hero.paragraphs.join('\n')}</textarea>
+                        <div class="field-hint">Uma linha por parágrafo</div>
+                    </div>
+                </div>
+            `;
+
+            // Seções
+            content.sections.forEach((section, i) => {
+                html += `
+                    <div class="section-card" data-section="${i}">
+                        <h2>📋 ${escapeHtml(section.title)}</h2>
+                        <div class="field">
+                            <label>Título da Seção</label>
+                            <input type="text" class="section-title" value="${escapeHtml(section.title)}" />
+                        </div>
+                `;
+
+                // Parágrafos
+                if (section.content.paragraphs.length > 0) {
+                    html += `
+                        <div class="field">
+                            <label>Parágrafos</label>
+                            <textarea class="section-paragraphs">${section.content.paragraphs.map(p => (p.muted ? '[muted] ' : '') + p.text).join('\n\n')}</textarea>
+                            <div class="field-hint">Use [muted] no início para texto em cinza. Use **texto** para negrito. Separe parágrafos com linha em branco.</div>
+                        </div>
+                    `;
+                }
+
+                // Lista
+                if (section.content.list.length > 0) {
+                    html += `
+                        <div class="field">
+                            <label>Lista de Itens</label>
+                            <div class="list-editor" data-list="${i}">
+                                ${section.content.list.map((item, j) => `
+                                    <div class="list-item">
+                                        <input type="text" value="${escapeHtml(item)}" />
+                                        <button class="btn-remove" onclick="removeListItem(${i}, ${j})">✕</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <button class="btn-add" onclick="addListItem(${i})">+ Adicionar item</button>
+                        </div>
+                    `;
+                }
+
+                // Preço
+                if (section.content.price) {
+                    html += `
+                        <div class="field">
+                            <label>Preço</label>
+                            <input type="text" class="section-price" value="${escapeHtml(section.content.price)}" />
+                        </div>
+                        <div class="field">
+                            <label>Nota do Preço</label>
+                            <textarea class="section-price-note">${escapeHtml(section.content.priceNote || '')}</textarea>
+                        </div>
+                    `;
+                }
+
+                // CTA
+                if (section.content.cta) {
+                    html += `
+                        <div class="field">
+                            <label>Texto do Botão</label>
+                            <input type="text" class="section-cta-text" value="${escapeHtml(section.content.cta.text)}" />
+                        </div>
+                        <div class="field">
+                            <label>Link do Botão (WhatsApp)</label>
+                            <input type="text" class="section-cta-url" value="${escapeHtml(section.content.cta.url)}" />
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            });
+
+            // Observação
+            html += `
+                <div class="section-card">
+                    <h2>📌 Observação Final</h2>
+                    <div class="field">
+                        <label>Título</label>
+                        <input type="text" id="obs-title" value="${escapeHtml(content.observation.title)}" />
+                    </div>
+                    <div class="field">
+                        <label>Parágrafos</label>
+                        <textarea id="obs-paragraphs">${content.observation.paragraphs.join('\n\n')}</textarea>
+                    </div>
+                </div>
+            `;
+
+            // Footer
+            html += `
+                <div class="section-card">
+                    <h2>✍️ Assinatura</h2>
+                    <div class="field">
+                        <label>Nome (Assinatura)</label>
+                        <input type="text" id="footer-signature" value="${escapeHtml(content.footer.signature)}" />
+                    </div>
+                    <div class="field">
+                        <label>Subtítulo</label>
+                        <input type="text" id="footer-name" value="${escapeHtml(content.footer.name)}" />
+                    </div>
+                </div>
+            `;
+
+            editor.innerHTML = html;
+        }
+
+        function collectContent() {
+            // Hero
+            content.hero.title = document.getElementById('hero-title').value;
+            content.hero.tag = document.getElementById('hero-tag').value;
+            content.hero.paragraphs = document.getElementById('hero-paragraphs').value.split('\n').filter(p => p.trim());
+
+            // Seções
+            document.querySelectorAll('.section-card[data-section]').forEach((card, i) => {
+                const section = content.sections[i];
+
+                section.title = card.querySelector('.section-title').value;
+
+                // Parágrafos
+                const paragraphsEl = card.querySelector('.section-paragraphs');
+                if (paragraphsEl) {
+                    const paragraphs = paragraphsEl.value.split('\n\n').filter(p => p.trim());
+                    section.content.paragraphs = paragraphs.map(p => {
+                        const muted = p.startsWith('[muted]');
+                        const text = p.replace(/^\[muted\]\s*/, '');
+                        return { text, muted };
+                    });
+                }
+
+                // Lista
+                const listEditor = card.querySelector('.list-editor');
+                if (listEditor) {
+                    section.content.list = Array.from(listEditor.querySelectorAll('input')).map(input => input.value);
+                }
+
+                // Preço
+                const priceEl = card.querySelector('.section-price');
+                if (priceEl) {
+                    section.content.price = priceEl.value;
+                    section.content.priceNote = card.querySelector('.section-price-note').value;
+                }
+
+                // CTA
+                const ctaTextEl = card.querySelector('.section-cta-text');
+                if (ctaTextEl) {
+                    section.content.cta = {
+                        text: ctaTextEl.value,
+                        url: card.querySelector('.section-cta-url').value
+                    };
+                }
+            });
+
+            // Observação
+            content.observation.title = document.getElementById('obs-title').value;
+            content.observation.paragraphs = document.getElementById('obs-paragraphs').value.split('\n\n').filter(p => p.trim());
+
+            // Footer
+            content.footer.signature = document.getElementById('footer-signature').value;
+            content.footer.name = document.getElementById('footer-name').value;
+
+            return content;
+        }
+
+        function addListItem(sectionIndex) {
+            content.sections[sectionIndex].content.list.push('');
+            renderEditor();
+        }
+
+        function removeListItem(sectionIndex, itemIndex) {
+            collectContent();
+            content.sections[sectionIndex].content.list.splice(itemIndex, 1);
+            renderEditor();
+        }
+
+        async function save() {
+            try {
+                showStatus('Salvando...', 'loading');
+                const data = collectContent();
+                const res = await fetch('/api/content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) {
+                    showStatus('✓ Salvo com sucesso!', 'success');
+                    updatePreview();
+                } else {
+                    showStatus('Erro: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showStatus('Erro ao salvar', 'error');
+            }
+        }
+
+        async function deploy() {
+            if (!confirm('Isso vai salvar, fazer commit e push para o GitHub Pages. Continuar?')) {
+                return;
+            }
+
+            try {
+                // Primeiro salva
+                showStatus('Salvando...', 'loading');
+                const data = collectContent();
+                await fetch('/api/content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                // Depois faz deploy
+                showStatus('Publicando no GitHub...', 'loading');
+                const res = await fetch('/api/deploy', { method: 'POST' });
+                const result = await res.json();
+
+                if (result.success) {
+                    showStatus('✓ Publicado com sucesso!', 'success');
+                } else {
+                    showStatus('Erro: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showStatus('Erro ao publicar', 'error');
+            }
+        }
+
+        function togglePreview() {
+            document.body.classList.toggle('preview-mode');
+            if (document.body.classList.contains('preview-mode')) {
+                updatePreview();
+            }
+        }
+
+        async function updatePreview() {
+            try {
+                const data = collectContent();
+                const res = await fetch('/api/preview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const html = await res.text();
+                const iframe = document.getElementById('preview');
+                iframe.srcdoc = html;
+            } catch (error) {
+                console.error('Erro no preview:', error);
+            }
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = 'status show ' + type;
+
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    status.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // Inicializa
+        loadContent();
+    </script>
+</body>
+</html>
