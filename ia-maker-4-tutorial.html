@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA MAKER 4 — Tutorial Completo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0a;
+  --bg-card: #141414;
+  --bg-sidebar: #0e0e0e;
+  --bg-code: #1a1a2e;
+  --text: #e8e8e8;
+  --text-muted: #999;
+  --accent: #e63946;
+  --gold: #ffd700;
+  --gold-dim: #b8960f;
+  --border: #222;
+  --border-light: #333;
+  --green: #2ecc71;
+  --sidebar-w: 280px;
+  --header-h: 56px;
+}
+
+.light-mode {
+  --bg: #f5f2eb;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ebe7df;
+  --bg-code: #2d2926;
+  --text: #1a1a1a;
+  --text-muted: #666;
+  --border: #d4cec4;
+  --border-light: #c5bfb5;
+}
+
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  transition: background .3s, color .3s;
+}
+
+/* PROGRESS BAR */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  width: 0%; transition: width .1s linear;
+}
+
+/* HEADER */
+header {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; z-index: 900;
+}
+header .logo { display: flex; align-items: center; gap: 12px; }
+header .logo h1 {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
+  letter-spacing: 2px; color: var(--text);
+}
+header .logo span { color: var(--accent); }
+header .subtitle { font-size: .75rem; color: var(--text-muted); }
+header .controls { display: flex; align-items: center; gap: 12px; }
+
+.theme-toggle {
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 12px; border-radius: 6px;
+  cursor: pointer; font-size: .85rem; display: flex; align-items: center; gap: 6px;
+}
+.theme-toggle:hover { border-color: var(--gold); }
+
+.hamburger {
+  display: none; background: none; border: none; color: var(--text);
+  font-size: 1.5rem; cursor: pointer;
+}
+
+/* SIDEBAR */
+aside {
+  position: fixed; top: var(--header-h); left: 0; bottom: 0;
+  width: var(--sidebar-w); background: var(--bg-sidebar);
+  border-right: 1px solid var(--border); overflow-y: auto;
+  padding: 20px 0; z-index: 800; transition: transform .3s;
+}
+aside nav a {
+  display: block; padding: 8px 20px; color: var(--text-muted);
+  text-decoration: none; font-size: .85rem; border-left: 3px solid transparent;
+  transition: all .15s;
+}
+aside nav a:hover { color: var(--text); background: rgba(255,255,255,.03); }
+aside nav a.active {
+  color: var(--gold); border-left-color: var(--accent);
+  background: rgba(230,57,70,.06);
+}
+aside nav .nav-label {
+  padding: 16px 20px 6px; font-size: .65rem; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--text-muted); font-weight: 700;
+}
+
+/* MAIN */
+main {
+  margin-left: var(--sidebar-w); margin-top: var(--header-h);
+  padding: 40px 48px 80px; max-width: 960px;
+}
+
+/* TYPOGRAPHY */
+h2 {
+  font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem;
+  letter-spacing: 2px; color: var(--gold); margin: 60px 0 8px;
+  padding-top: 20px;
+}
+h2:first-of-type { margin-top: 0; }
+h3 {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
+  letter-spacing: 1px; color: var(--text); margin: 32px 0 12px;
+}
+h4 { font-size: 1rem; font-weight: 700; margin: 20px 0 8px; color: var(--accent); }
+p { margin-bottom: 16px; }
+strong { color: var(--gold); font-weight: 600; }
+ul, ol { margin: 0 0 16px 24px; }
+li { margin-bottom: 6px; }
+blockquote {
+  border-left: 3px solid var(--accent); padding: 12px 20px;
+  margin: 16px 0; background: rgba(230,57,70,.06);
+  font-style: italic; color: var(--text-muted);
+  border-radius: 0 8px 8px 0;
+}
+
+/* SCENE DIVIDER */
+.scene-divider {
+  text-align: center; margin: 48px 0; color: var(--text-muted);
+  font-size: .8rem; letter-spacing: 4px; position: relative;
+}
+.scene-divider::before, .scene-divider::after {
+  content: ''; position: absolute; top: 50%; height: 1px;
+  background: var(--border); width: calc(50% - 40px);
+}
+.scene-divider::before { left: 0; }
+.scene-divider::after { right: 0; }
+
+/* PROMPT BLOCK */
+.prompt-block {
+  background: var(--bg-code); border: 1px solid var(--border-light);
+  border-radius: 10px; margin: 16px 0; overflow: hidden;
+}
+.prompt-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px; background: rgba(255,255,255,.03);
+  border-bottom: 1px solid var(--border);
+}
+.prompt-header span { font-size: .8rem; color: var(--gold); font-weight: 600; }
+.copy-btn {
+  background: var(--accent); color: #fff; border: none;
+  padding: 5px 14px; border-radius: 5px; cursor: pointer;
+  font-size: .78rem; font-weight: 600; transition: all .15s;
+}
+.copy-btn:hover { background: #c22d3a; transform: scale(1.03); }
+.copy-btn.copied { background: var(--green); }
+.prompt-block pre {
+  padding: 16px; font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem; line-height: 1.6; white-space: pre-wrap;
+  word-break: break-word; color: #ccc;
+}
+.light-mode .prompt-block pre { color: #ddd; }
+
+/* ACCORDION */
+.accordion { margin: 16px 0; }
+.accordion-toggle {
+  width: 100%; text-align: left; background: var(--bg-card);
+  border: 1px solid var(--border); color: var(--text);
+  padding: 14px 20px; cursor: pointer; font-size: .95rem;
+  font-weight: 600; border-radius: 8px; display: flex;
+  justify-content: space-between; align-items: center;
+  transition: all .15s; font-family: 'DM Sans', sans-serif;
+}
+.accordion-toggle:hover { border-color: var(--gold); }
+.accordion-toggle .arrow { transition: transform .2s; font-size: .8rem; }
+.accordion-toggle.open .arrow { transform: rotate(180deg); }
+.accordion-toggle.open { border-radius: 8px 8px 0 0; border-bottom-color: transparent; }
+.accordion-content {
+  display: none; border: 1px solid var(--border); border-top: none;
+  border-radius: 0 0 8px 8px; background: var(--bg-card);
+}
+.accordion-content.show { display: block; }
+
+/* CARDS */
+.card-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px; margin: 20px 0;
+}
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px; transition: all .2s;
+}
+.card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.card .card-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+  color: var(--accent); line-height: 1;
+}
+.card .card-title {
+  font-weight: 700; font-size: 1rem; margin: 8px 0 6px;
+  color: var(--gold);
+}
+.card .card-desc { font-size: .85rem; color: var(--text-muted); line-height: 1.5; }
+
+/* COMPARE */
+.compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;
+}
+.compare-bad, .compare-good {
+  border-radius: 10px; padding: 20px; border: 1px solid;
+}
+.compare-bad { background: rgba(230,57,70,.06); border-color: var(--accent); }
+.compare-good { background: rgba(46,204,113,.06); border-color: var(--green); }
+.compare-bad .compare-label { color: var(--accent); font-weight: 700; font-size: .85rem; margin-bottom: 10px; }
+.compare-good .compare-label { color: var(--green); font-weight: 700; font-size: .85rem; margin-bottom: 10px; }
+
+/* PIPELINE */
+.pipeline { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+.pipeline-step {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 10px;
+  transition: all .15s;
+}
+.pipeline-step:hover { border-color: var(--gold); }
+.pipeline-step .step-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+  color: var(--accent); min-width: 36px; text-align: center;
+}
+.pipeline-step .step-title { font-weight: 700; }
+.pipeline-step .step-desc { font-size: .85rem; color: var(--text-muted); }
+.pipeline-arrow {
+  text-align: center; font-size: 1.2rem; color: var(--gold); padding: 4px 0;
+}
+
+/* TABLES */
+.shot-table, .tool-table {
+  width: 100%; border-collapse: collapse; margin: 20px 0; font-size: .9rem;
+}
+.shot-table th, .tool-table th {
+  background: var(--bg-card); color: var(--gold); text-align: left;
+  padding: 12px 16px; border-bottom: 2px solid var(--accent);
+  font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; font-size: 1rem;
+}
+.shot-table td, .tool-table td {
+  padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top;
+}
+.shot-table tr:hover td, .tool-table tr:hover td { background: rgba(255,215,0,.03); }
+
+/* CHECKLIST */
+.checklist { list-style: none; margin: 20px 0; padding: 0; }
+.checklist li {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 16px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 8px;
+  margin-bottom: 8px; cursor: pointer; transition: all .15s;
+  font-size: .9rem; user-select: none;
+}
+.checklist li:hover { border-color: var(--gold); }
+.checklist li input[type="checkbox"] {
+  accent-color: var(--accent); margin-top: 3px; flex-shrink: 0;
+  width: 18px; height: 18px; cursor: pointer;
+}
+.checklist li.checked { opacity: .5; text-decoration: line-through; }
+
+/* PRACTICE */
+.practice {
+  background: rgba(255,215,0,.05); border: 1px solid var(--gold-dim);
+  border-radius: 10px; padding: 20px; margin: 20px 0;
+}
+.practice .practice-label {
+  font-family: 'Bebas Neue', sans-serif; color: var(--gold);
+  font-size: 1.1rem; margin-bottom: 10px; letter-spacing: 1px;
+}
+
+/* TIP / WARNING */
+.tip {
+  background: rgba(46,204,113,.06); border-left: 3px solid var(--green);
+  padding: 14px 20px; margin: 16px 0; border-radius: 0 8px 8px 0;
+}
+.tip .tip-label { color: var(--green); font-weight: 700; font-size: .85rem; margin-bottom: 6px; }
+.warning {
+  background: rgba(230,57,70,.06); border-left: 3px solid var(--accent);
+  padding: 14px 20px; margin: 16px 0; border-radius: 0 8px 8px 0;
+}
+.warning .tip-label { color: var(--accent); font-weight: 700; font-size: .85rem; margin-bottom: 6px; }
+
+/* STRUCTURE BLOCK */
+.structure-block {
+  background: var(--bg-card); border: 2px solid var(--gold-dim);
+  border-radius: 10px; padding: 24px; margin: 20px 0; text-align: center;
+}
+.structure-block .structure-formula {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem;
+  letter-spacing: 2px; color: var(--gold);
+}
+.structure-block .structure-formula span { color: var(--accent); }
+
+/* STYLE CARDS */
+.style-cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px; margin: 20px 0;
+}
+.style-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px; text-align: center;
+  transition: all .2s;
+}
+.style-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.style-card .style-emoji { font-size: 2.5rem; margin-bottom: 10px; }
+.style-card .style-name { font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+.style-card .style-desc { font-size: .82rem; color: var(--text-muted); line-height: 1.5; }
+
+/* LINKS */
+a { color: var(--gold); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* FOOTER */
+footer {
+  margin-left: var(--sidebar-w); padding: 40px 48px;
+  border-top: 1px solid var(--border); text-align: center;
+  color: var(--text-muted); font-size: .85rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  aside { transform: translateX(-100%); width: 280px; }
+  aside.open { transform: translateX(0); }
+  .hamburger { display: block; }
+  main { padding: 24px 16px 60px; }
+  footer { margin-left: 0; padding: 24px 16px; }
+  h2 { font-size: 1.8rem; }
+  .compare { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+  header .subtitle { display: none; }
+  .structure-block .structure-formula { font-size: 1.1rem; }
+}
+
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.5); z-index: 790;
+}
+.sidebar-overlay.show { display: block; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header>
+  <div class="logo">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div>
+      <h1>IA <span>MAKER</span> 4 — Tutorial Completo</h1>
+      <div class="subtitle">Workshop Dia 1 — @ofilmboss</div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span id="theme-icon">&#9790;</span> <span id="theme-label">Light</span>
+    </button>
+  </div>
+</header>
+
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<aside id="sidebar">
+  <nav>
+    <div class="nav-label">Inicio</div>
+    <a href="#checklist">&#9745; Checklist Rapido</a>
+    <div class="nav-label">Modulos</div>
+    <a href="#mod1">01 — Introducao e Motivacao</a>
+    <a href="#mod2">02 — Tipos de IA</a>
+    <a href="#mod3">03 — Qualidade e Criterio</a>
+    <a href="#mod4">04 — 9 Camadas de Qualidade</a>
+    <a href="#mod5">05 — Segredo do Prompt</a>
+    <a href="#mod6">06 — Gerar Resultado</a>
+    <a href="#mod7">07 — Pipeline Profissional</a>
+    <a href="#mod8">08 — Criacao de Personagem</a>
+    <a href="#mod9">09 — Estilos de Animacao</a>
+    <a href="#mod10">10 — Enquadramento</a>
+    <a href="#mod11">11 — Storytelling Visual</a>
+    <a href="#mod12">12 — O Que Vem Depois</a>
+    <div class="nav-label">Recursos</div>
+    <a href="#prompts">&#128203; Banco de Prompts</a>
+    <a href="#ferramentas">&#128295; Ferramentas</a>
+    <a href="#links">&#128279; Links Uteis</a>
+  </nav>
+</aside>
+
+<main>
+
+<!-- ========== CHECKLIST ========== -->
+<section id="checklist">
+<h2>&#9745; Checklist Rapido</h2>
+<p>Resumo dos passos essenciais do workshop. Marque conforme for aprendendo:</p>
+
+<ul class="checklist">
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Entender os 4 tipos de IA e suas limitacoes (contexto vs sem contexto)
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Adotar a mentalidade #TenhaCriterio — nao aceitar resultado mediocre
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Dominar as 9 Camadas de Qualidade
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Aprender a estrutura: [Sujeito] [acao] [local] [composicao] [iluminacao] [Estilo]
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Entender a tecnica da Ponte de Resultado
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Seguir o Pipeline de 7 etapas (Inspiracao → Montagem)
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Criar personagem com pelo menos 1 dos 3 metodos
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Escolher um estilo de animacao com intencao (nunca generico)
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Conhecer os 9 tipos de enquadramento/shot
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Praticar Storytelling Visual com sequencia de 4 imagens
+  </li>
+  <li onclick="this.classList.toggle('checked'); this.querySelector('input').checked=!this.querySelector('input').checked">
+    <input type="checkbox"> Salvar e testar todos os 5 prompts do PromptBoss
+  </li>
+</ul>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 1 ========== -->
+<section id="mod1">
+<h2>Modulo 1: Introducao e Motivacao</h2>
+<h3>&#127916; Por Que Vale a Pena Dominar IA Agora</h3>
+
+<p>O <strong>IA MAKER 4</strong> e um workshop intensivo focado em criacao de conteudo profissional com IA — especificamente animacao 3D, geracao de imagens e videos cinematograficos. Ministrado por <strong>@ofilmboss (Filmboss)</strong>, criador de conteudo que acumula milhoes de views usando exclusivamente IA.</p>
+
+<p>O diferencial: nao ensina "como usar uma ferramenta", mas sim <strong>como pensar como diretor de cinema</strong> usando IA como instrumento. Foco em processo criativo, storytelling visual e qualidade profissional.</p>
+
+<h3>5 Razoes Pra Comecar Agora</h3>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-num">1</div>
+    <div class="card-title">Todo mundo e iniciante</div>
+    <div class="card-desc">Ninguem tem 10 anos de experiencia em IA generativa. O campo esta completamente aberto pra quem se comprometer agora.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">2</div>
+    <div class="card-title">Muito mercado, pouca gente</div>
+    <div class="card-desc">Marcas, agencias e produtoras estao desesperadas por profissionais qualificados. A maioria ainda esta no nivel "prompt generico".</div>
+  </div>
+  <div class="card">
+    <div class="card-num">3</div>
+    <div class="card-title">Profissionalmente valorizado</div>
+    <div class="card-desc">Grandes marcas ja publicaram comerciais feitos 100% com IA. Nao e futuro — e presente.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">4</div>
+    <div class="card-title">Conteudo com IA viraliza</div>
+    <div class="card-desc">Novidade + qualidade visual + impacto emocional fazem conteudos de IA performar muito acima da media.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">5</div>
+    <div class="card-title">Qualidade compete com producao tradicional</div>
+    <div class="card-desc">Resultados de IA ja competem com producoes que custavam milhares e levavam semanas. Horas, nao semanas.</div>
+  </div>
+</div>
+
+<h3>Prova de Resultados Reais</h3>
+<p>Numeros dos ultimos posts do Filmboss (todos feitos com IA):</p>
+<ul>
+  <li>730 mil views</li>
+  <li>239 mil views</li>
+  <li>1 milhao de views</li>
+  <li>214 mil views</li>
+  <li><strong>17 milhoes de views em apenas 30 dias</strong></li>
+</ul>
+
+<p>Visualizacoes se convertem em: orcamentos de empresas, parcerias com marcas, pessoas influentes querendo contratar, e monetizacao direta.</p>
+
+<blockquote>"Isso e oportunidade de negocio!" — dominar criacao com IA nao e hobby, e um skill que gera receita real.</blockquote>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Pesquise 3 contas no Instagram/TikTok que criam conteudo com IA. Analise: o que diferencia as que tem qualidade profissional das que parecem "genericas"? Anote suas observacoes.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 2 ========== -->
+<section id="mod2">
+<h2>Modulo 2: Tipos de IA e Limitacoes</h2>
+<h3>&#129302; Os 4 Tipos de IA Que Voce Vai Usar</h3>
+
+<p>A distincao mais importante: a <strong>janela de contexto</strong>.</p>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#128172;</div>
+    <div class="card-title">LLMs (Texto)</div>
+    <div class="card-desc"><strong style="color:var(--green)">TEM contexto</strong> — lembram da conversa. ChatGPT, Claude, Gemini. Uso: planejamento, criacao de prompts, refinamento de ideias, storytelling.</div>
+  </div>
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#128444;</div>
+    <div class="card-title">Geradores de Imagem</div>
+    <div class="card-desc"><strong style="color:var(--accent)">SEM contexto</strong> — cada prompt e independente. Midjourney, Seadream, Nano Banana Pro. Uso: frames, personagens, cenarios.</div>
+  </div>
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#127909;</div>
+    <div class="card-title">Geradores de Video</div>
+    <div class="card-desc"><strong style="color:var(--accent)">SEM contexto</strong> — cada geracao e isolada. Kling 2.6/3.0, Veo 3.1. Uso: transformar imagens em animacoes.</div>
+  </div>
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#127925;</div>
+    <div class="card-title">Criacao de Musica</div>
+    <div class="card-desc"><strong style="color:var(--accent)">SEM contexto</strong>. Suno v5. Uso: criar trilhas sonoras para os videos finais.</div>
+  </div>
+</div>
+
+<div class="warning">
+  <div class="tip-label">&#9888; Por Que Isso Importa</div>
+  <p style="margin:0">A ausencia de contexto nos geradores de imagem e video e o motivo pelo qual tecnicas de <strong>consistencia</strong> sao tao importantes. A IA "esquece" tudo a cada prompt — voce precisa de tecnicas especificas pra manter coerencia visual.</p>
+</div>
+
+<h3>Limitacoes Reais da IA</h3>
+
+<blockquote>"IA e perfeito e faz tudo? Nao! Mas faz muito!"</blockquote>
+
+<div class="compare">
+  <div class="compare-bad">
+    <div class="compare-label">&#9888; Limite Tecnico da IA</div>
+    <ul style="margin-left:16px">
+      <li><strong>Movimentos rapidos</strong> — cenas de acao ficam distorcidas</li>
+      <li><strong>Fala/speech</strong> — sincronizacao labial ainda e muito ruim</li>
+      <li><strong>Postura caricata</strong> — poses exageradas geram resultados estranhos</li>
+    </ul>
+  </div>
+  <div class="compare-bad">
+    <div class="compare-label">&#9888; SEU Limite de Conhecimento</div>
+    <p style="margin:0;font-size:.9rem">Se seu conhecimento sobre composicao, iluminacao, camera e storytelling e baixo, seu output sera baixo — independente de quao boa e a IA.</p>
+  </div>
+</div>
+
+<blockquote>"Objetivo e sempre ficar o mais proximo do limite da IA."</blockquote>
+
+<div class="compare">
+  <div class="compare-bad">
+    <div class="compare-label">&#9888; Erro Comum</div>
+    <p style="margin:0;font-size:.9rem">Ficar frustrado tentando forcar a IA a fazer algo que ela nao consegue (movimentos rapidos, fala sincronizada). Desperdicar creditos e tempo.</p>
+  </div>
+  <div class="compare-good">
+    <div class="compare-label">&#9989; Certo</div>
+    <p style="margin:0;font-size:.9rem">Trabalhar COM os limites: evitar cenas de acao intensa, nao tentar sincronizar labios, usar poses naturais. Maximizar o que a IA faz BEM.</p>
+  </div>
+</div>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Teste uma IA geradora de imagem com um prompt super vago ("um gato bonito") e depois com um prompt detalhado (descrevendo pose, luz, cenario, camera). Compare os resultados e anote as diferencas.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 3 ========== -->
+<section id="mod3">
+<h2>Modulo 3: Qualidade e Criterio</h2>
+<h3>&#127942; #TenhaCriterio — O Principio Mais Importante</h3>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-num">1</div>
+    <div class="card-title">Nao aceite qualquer resultado</div>
+    <div class="card-desc">Profissionais regeneram, ajustam, testam variacoes. A diferenca entre mediocre e viral e nao aceitar o primeiro resultado.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">2</div>
+    <div class="card-title">Tenha boas referencias</div>
+    <div class="card-desc">Consuma filmes, animacoes premiadas, fotografias profissionais. Repertorio pobre = criterio pobre.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">3</div>
+    <div class="card-title">Gaste tempo no projeto</div>
+    <div class="card-desc">Qualidade leva tempo. Planejamento, refinamento e curadoria exigem dedicacao, mesmo com IA acelerando.</div>
+  </div>
+</div>
+
+<h3>&#128161; Misture Referencias de FORA do Seu Nicho</h3>
+
+<p>Se voce so consome animacao 3D, seus resultados serao iguais aos de todo mundo. Fontes recomendadas:</p>
+
+<ul>
+  <li><strong>Capas de livros</strong> — design grafico, tipografia, composicao</li>
+  <li><strong>Games</strong> — universos visuais, design de personagem, iluminacao</li>
+  <li><strong>Arquitetura</strong> — formas, materiais, espacos</li>
+  <li><strong>Historias pessoais e familiares</strong> — narrativa, emocao, autenticidade</li>
+  <li><strong>Design de produto</strong> — texturas, materiais, acabamentos</li>
+</ul>
+
+<h3>&#128038; "Viver Fora da Gaiola"</h3>
+
+<blockquote>"Saia da gaiola e aumente o seu repertorio."</blockquote>
+
+<p>O Filmboss usa a metafora do passaro na gaiola: se voce vive dentro de uma gaiola (so trabalho, so as mesmas referencias), seu repertorio e limitado.</p>
+
+<p>Recomendacoes concretas:</p>
+<ol>
+  <li>Priorize vida fora do trabalho — experiencias reais alimentam criatividade</li>
+  <li>Aproveite a familia — relacoes humanas sao materia-prima de boas historias</li>
+  <li>Escute historias da avo, da mae, do pai — narrativas unicas que ninguem mais tem</li>
+  <li>Assista filmes e series fora do que voce normalmente assiste</li>
+  <li>Consuma musicas que nao esta acostumado</li>
+</ol>
+
+<div class="tip">
+  <div class="tip-label">&#9989; Insight</div>
+  <p style="margin:0">Quem voce e como pessoa aparece no trabalho que voce faz. Quanto mais rica for sua vida, mais rico sera seu conteudo.</p>
+</div>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Escolha 3 fontes de referencia de FORA do universo de animacao (ex: livro de arquitetura, album musical, serie de fotografia). Salve 5 imagens de cada que te inspiram e anote POR QUE cada uma chamou atencao.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 4 — 9 CAMADAS ========== -->
+<section id="mod4">
+<h2>Modulo 4: As 9 Camadas de Qualidade</h2>
+<h3>&#127912; O Framework Mais Importante do Workshop</h3>
+
+<div class="warning">
+  <div class="tip-label">&#9888; Erro Comum</div>
+  <p style="margin:0">"O erro mais comum e ser superficial no prompt." A maioria descreve apenas a acao ("um urso na floresta") e no maximo o personagem. O resto fica pro acaso — e a IA preenche com o mais obvio e generico possivel.</p>
+</div>
+
+<p>Cada camada e uma dimensao que voce precisa considerar. Quanto mais camadas voce ativa, mais profissional e unico o resultado:</p>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-num">1</div>
+    <div class="card-title">Acao da Cena</div>
+    <div class="card-desc">O que esta acontecendo? Seja especifico: "caminhando lentamente contra o vento, mao segurando o chapeu" — nao apenas "andando".</div>
+  </div>
+  <div class="card">
+    <div class="card-num">2</div>
+    <div class="card-title">Personagem</div>
+    <div class="card-desc">Quem esta em cena? Expressao facial, roupa, tipo fisico. Se voce nao descreve, a IA decide pelo generico.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">3</div>
+    <div class="card-title">Texturas e Imperfeicoes</div>
+    <div class="card-desc">Poros na pele, desgaste na roupa, ferrugem no metal, poeira. Mundo real e imperfeito — perfeicao demais = cara de IA.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">4</div>
+    <div class="card-title">Universo</div>
+    <div class="card-desc">Nao e "uma floresta" — e "floresta densa com neblina baixa, arvores centenarias cobertas de musgo, raizes expostas e luz filtrada".</div>
+  </div>
+  <div class="card">
+    <div class="card-num">5</div>
+    <div class="card-title">Enquadramento</div>
+    <div class="card-desc">Close-up = intimidade e emocao. Plano geral = solidao ou grandeza. O angulo muda completamente a historia da imagem.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">6</div>
+    <div class="card-title">Iluminacao</div>
+    <div class="card-desc">A camada com maior impacto emocional. Define o "mood" inteiro. "Sempre gravado do lado da sombra, como em um documentario."</div>
+  </div>
+  <div class="card">
+    <div class="card-num">7</div>
+    <div class="card-title">Emocao</div>
+    <div class="card-desc">Melancolia, euforia, tensao, paz? Nao e so a expressao facial — e o conjunto: cor, luz, composicao, acao. Defina com intencao.</div>
+  </div>
+  <div class="card">
+    <div class="card-num">8</div>
+    <div class="card-title">Consistencia</div>
+    <div class="card-desc">O maior desafio. Use bancos de consistencia, imagens de referencia, e "mantenha os personagens, apenas mude a acao".</div>
+  </div>
+  <div class="card">
+    <div class="card-num">9</div>
+    <div class="card-title">Lentes</div>
+    <div class="card-desc">"Lente cine f1.8 com aberracao cromatica" — f1.8 = fundo desfocado cinematografico. Aberracao cromatica = visual de camera real.</div>
+  </div>
+</div>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Pegue uma imagem que voce ja gerou com IA. Analise: quais das 9 camadas estao presentes? Quais faltam? Reescreva o prompt ativando TODAS as 9 camadas e compare o resultado.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 5 ========== -->
+<section id="mod5">
+<h2>Modulo 5: Segredo do Prompt Perfeito</h2>
+<h3>&#9878; Estrutura, Equilibrio e Tecnica da Ponte</h3>
+
+<blockquote>"As pessoas ou super valorizam o prompt ou ignoram. Aqui vence o equilibrio."</blockquote>
+
+<p>Dois extremos prejudiciais:</p>
+<ul>
+  <li><strong>Ignorar o prompt</strong> — escrever qualquer coisa vaga. Resultado generico.</li>
+  <li><strong>Super valorizar</strong> — achar que existe formula magica. Prompt importa, mas nao e tudo.</li>
+</ul>
+
+<p>O equilibrio: prompts detalhados e intencionais (usando as 9 camadas), mas sabendo que o processo completo (personagem, referencias, consistencia, curadoria) e igualmente importante.</p>
+
+<h3>Prompt Vago vs Detalhado</h3>
+
+<div class="compare">
+  <div class="compare-bad">
+    <div class="compare-label">&#9888; Prompt VAGO</div>
+    <div class="prompt-block" style="margin:10px 0 0;border:none">
+      <pre>Animacao 3d de um urso na floresta</pre>
+    </div>
+    <p style="margin-top:10px;font-size:.85rem">"E bobinho e generico, nao e feio, mas hoje em dia nao e profissional."</p>
+  </div>
+  <div class="compare-good">
+    <div class="compare-label">&#9989; Prompt DETALHADO</div>
+    <p style="font-size:.85rem;margin:0">Inclui todas as camadas: sujeito detalhado, acao especifica, universo descrito, composicao de camera, iluminacao intencional, texturas, lente, estilo.</p>
+    <p style="margin-top:10px;font-size:.85rem">"E cinematografico, parece cena de filme caro. Mais valorizado."</p>
+  </div>
+</div>
+
+<h3>&#128204; A Estrutura do Prompt</h3>
+
+<div class="structure-block">
+  <div class="structure-formula">
+    <span>[Sujeito]</span> [acao] <span>[local]</span> [composicao/camera] <span>[iluminacao]</span> [Estilo]
+  </div>
+  <p style="margin-top:12px;color:var(--text-muted);font-size:.85rem">O que vem primeiro tem mais influencia no resultado. Coloque o mais importante no inicio.</p>
+</div>
+
+<div class="tip">
+  <div class="tip-label">&#9989; Dica do Filmboss</div>
+  <p style="margin:0">"Mas nao precisa decorar... o importante e entender que e por ordem de importancia."</p>
+</div>
+
+<h3>&#127881; A Tecnica da "Ponte de Resultado"</h3>
+
+<p>Quando a IA nao consegue gerar o que voce quer diretamente, <strong>use um passo intermediario</strong>.</p>
+
+<blockquote>"Transforme em outra coisa primeiro, depois va para onde voce quer."</blockquote>
+
+<p><strong>Exemplo pratico:</strong></p>
+<ol>
+  <li><strong>Primeiro:</strong> Desenhe um esboco a mao (pode ser tosco) ou peca pra IA gerar um esboco simples</li>
+  <li><strong>Segundo:</strong> Use esse esboco como referencia e peca pra IA converter para 3D detalhado</li>
+</ol>
+
+<p>O esboco serve como "ponte" — da pra IA uma referencia visual concreta, em vez de texto puro. Muito mais controle sobre o resultado.</p>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">1) Escreva um prompt vago de 1 linha. 2) Reescreva usando a estrutura [Sujeito] [acao] [local] [composicao] [iluminacao] [Estilo] com pelo menos 5 das 9 camadas. 3) Teste ambos na mesma ferramenta e compare.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 6 ========== -->
+<section id="mod6">
+<h2>Modulo 6: Gerar Resultado</h2>
+<h3>&#128176; O Lado Negocio</h3>
+
+<p>Dominar IA nao basta — precisa saber gerar resultado. Competencias complementares:</p>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#128184;</div>
+    <div class="card-title">Vender</div>
+    <div class="card-desc">Saber oferecer seus servicos e fechar projetos.</div>
+  </div>
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#128241;</div>
+    <div class="card-title">Criacao de conteudo</div>
+    <div class="card-desc">Usar IA pra criar conteudo que atrai audiencia.</div>
+  </div>
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#128200;</div>
+    <div class="card-title">Crescer audiencia</div>
+    <div class="card-desc">Construir seguidores interessados no seu trabalho.</div>
+  </div>
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#128064;</div>
+    <div class="card-title">Gerar views</div>
+    <div class="card-desc">Entender o que faz conteudo performar nas plataformas.</div>
+  </div>
+  <div class="card">
+    <div class="card-num" style="font-size:1.5rem">&#129309;</div>
+    <div class="card-title">"Vender sem vender"</div>
+    <div class="card-desc">Criar conteudo que demonstra habilidade naturalmente, sem parecer propaganda.</div>
+  </div>
+</div>
+
+<div class="tip">
+  <div class="tip-label">&#9989; Mensagem Central</div>
+  <p style="margin:0">A habilidade tecnica com IA e o fundamento, mas precisa ser acompanhada de visao de negocio pra se transformar em receita real.</p>
+</div>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Defina: qual seria SEU modelo de negocio usando IA criativa? (Ex: servicos pra marcas, conteudo proprio, templates de prompt, aulas). Escreva 3 formas de monetizar.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 7 — PIPELINE ========== -->
+<section id="mod7">
+<h2>Modulo 7: Pipeline de Criacao Profissional</h2>
+<h3>&#127916; "Quer Ter Consistencia? Tenha Processo!"</h3>
+
+<blockquote>"Processos claros mudam o jogo."</blockquote>
+
+<h3>&#9940; Os 5 Erros Mais Comuns</h3>
+
+<ol>
+  <li><strong>Sai criando na raca</strong> — abre a ferramenta sem planejamento. Resultado inconsistente e sem direcao.</li>
+  <li><strong>Nao entende o basico sobre prompt</strong> — escreve prompts vagos, nao conhece as camadas.</li>
+  <li><strong>Usa modelo de IA errado</strong> — usa ferramenta de imagem quando deveria usar LLM pra planejar.</li>
+  <li><strong>Nao respeita a ordem das coisas</strong> — tenta gerar video antes de ter personagem definido.</li>
+  <li><strong>Resultado depende da "boa vontade" da IA</strong> — sem processo, qualidade varia loucamente.</li>
+</ol>
+
+<blockquote>Benjamin Franklin: "Falhar em planejar e planejar para falhar."</blockquote>
+
+<h3 id="pipeline-visual">&#127915; O Pipeline Completo (7 Etapas)</h3>
+
+<div class="pipeline">
+  <div class="pipeline-step">
+    <div class="step-num">1</div>
+    <div>
+      <div class="step-title">Inspiracao e Meta</div>
+      <div class="step-desc">Defina o destino: estilo, clima, sentimento, personagem. Antes de abrir qualquer ferramenta.</div>
+    </div>
+  </div>
+  <div class="pipeline-arrow">&#9660;</div>
+  <div class="pipeline-step">
+    <div class="step-num">2</div>
+    <div>
+      <div class="step-title">Criar Personagem e Universo</div>
+      <div class="step-desc">Desenhe ou gere seu personagem. Crie um "banco de consistencia" com varias poses e angulos.</div>
+    </div>
+  </div>
+  <div class="pipeline-arrow">&#9660;</div>
+  <div class="pipeline-step">
+    <div class="step-num">3</div>
+    <div>
+      <div class="step-title">Primeiro Frame</div>
+      <div class="step-desc">A primeira imagem define o padrao visual de tudo. Se o primeiro frame e mediocre, o projeto inteiro sera.</div>
+    </div>
+  </div>
+  <div class="pipeline-arrow">&#9660;</div>
+  <div class="pipeline-step">
+    <div class="step-num">4</div>
+    <div>
+      <div class="step-title">Storytelling Visual</div>
+      <div class="step-desc">Sequencia de imagens variando enquadramentos e angulos. Planeje ANTES de gerar.</div>
+    </div>
+  </div>
+  <div class="pipeline-arrow">&#9660;</div>
+  <div class="pipeline-step">
+    <div class="step-num">5</div>
+    <div>
+      <div class="step-title">Direcao e Geracao dos Videos</div>
+      <div class="step-desc">Use geradores de video (Kling, Veo) pra transformar cada frame em clipe animado.</div>
+    </div>
+  </div>
+  <div class="pipeline-arrow">&#9660;</div>
+  <div class="pipeline-step">
+    <div class="step-num">6</div>
+    <div>
+      <div class="step-title">Upscale 4K <span style="color:var(--text-muted);font-weight:400">[opcional]</span></div>
+      <div class="step-desc">Melhore resolucao e detalhes. Nao obrigatorio, mas faz diferenca grande na qualidade final.</div>
+    </div>
+  </div>
+  <div class="pipeline-arrow">&#9660;</div>
+  <div class="pipeline-step">
+    <div class="step-num">7</div>
+    <div>
+      <div class="step-title">Montagem e Edicao</div>
+      <div class="step-desc">Junte tudo — videos, trilha sonora, transicoes — numa edicao final coesa.</div>
+    </div>
+  </div>
+</div>
+
+<div class="warning">
+  <div class="tip-label">&#9888; Ponto Crucial</div>
+  <p style="margin:0">Cada etapa depende da anterior. Pular etapas ou fazer fora de ordem gera problemas que se acumulam. O processo e sequencial por design.</p>
+</div>
+
+<h3>&#127919; META — Defina Antes de Comecar</h3>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-title">&#127916; Estilo de Video</div>
+    <div class="card-desc">3D realista? Estilizado? Stop motion? Feltro? Cada estilo tem estetica completamente diferente.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#127752; Clima (Mood)</div>
+    <div class="card-desc">Sombrio? Colorido? Nostalgico? Orienta decisoes de cor, luz e cenario.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#128156; Sentimento</div>
+    <div class="card-desc">Inspiracao? Medo? Ternura? Adrenalina? Guia narrativa e storytelling.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#129489; Personagem</div>
+    <div class="card-desc">Aparencia, roupa, comportamento, personalidade do protagonista.</div>
+  </div>
+</div>
+
+<h3>&#128444; Moodboard</h3>
+<p>Antes de gerar qualquer imagem, crie um moodboard com referencias visuais: estilo, paleta de cores, iluminacao, atmosfera, personagem. E seu "mapa visual" que alinha decisoes antes de gastar creditos. O workshop mostra como montar um em ~2 minutos.</p>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Defina sua META para um mini-projeto: escolha 1 estilo, 1 clima, 1 sentimento e 1 personagem. Monte um moodboard de 5-10 imagens de referencia (Pinterest, Google Images, screenshots de filmes).</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 8 ========== -->
+<section id="mod8">
+<h2>Modulo 8: Criacao de Personagem</h2>
+<h3>&#129489; 3 Metodos Praticos</h3>
+
+<p>A criacao do personagem e uma das etapas mais importantes do pipeline.</p>
+
+<h3>Metodo 1: Desenho a Mao → 3D</h3>
+
+<ol>
+  <li>Faca um desenho basico — proporcoes, roupa, pose. Nao precisa ser bonito, precisa comunicar a ideia.</li>
+  <li>Fotografe ou escaneie o desenho.</li>
+  <li>Use como referencia visual na IA.</li>
+  <li>Aplique prompt de conversao de estilo (ex: "Mude para estilo de animacao 3D detalhado com texturas...")</li>
+</ol>
+
+<div class="tip">
+  <div class="tip-label">&#9989; Vantagem</div>
+  <p style="margin:0">Controle total sobre o design. O esboco funciona como "ponte" — da pra IA algo concreto em vez de inventar do zero.</p>
+</div>
+
+<h3>Metodo 2: Alterar Foto Real</h3>
+
+<p>Pegue uma foto de pessoa real ou personagem existente e converta para animacao 3D.</p>
+
+<div class="accordion">
+  <button class="accordion-toggle" onclick="toggleAccordion(this)">
+    &#128203; Ver Prompt Completo — Foto → 3D <span class="arrow">&#9660;</span>
+  </button>
+  <div class="accordion-content">
+    <div class="prompt-block" style="border:none;border-radius:0">
+      <div class="prompt-header">
+        <span>Prompt: Foto → Animacao 3D</span>
+        <button class="copy-btn" onclick="copyPrompt(this)">&#128203; Copiar</button>
+      </div>
+      <pre>[Pedido] Mude para Estilo de animação 3d de filme traços levemente de cartoon mas
+com texturas e detalhes.
+
+[Descrição da cena] O chaves está deitado no chão com o queixo apoiado na mão,
+com expressão impressionado pois está vendo o Chapolin colorido em miniatura
+
+[Melhorar composição] Com composições mais profissionais como de um diretor de
+fotografia: Regra dos terços, proporção áurea, bem como os filmes premiados.
+
+[Iluminação] A luz é realista e cinematográfica da luz de um amanhecer, sempre
+gravado do lado da sombra, como em um documentário
+
+[Consistência] Mantenha os personagens. Apenas mude a ação para posição que
+foi pedido.
+
+[Mais realismo] Quero texturas no personagem, poros na pele, leves imperfeições,
+textura na roupa e brilhos realistas.
+
+[Melhorar estética de câmera] Lente cine f1.8 com aberração cromática</pre>
+    </div>
+  </div>
+</div>
+
+<h4>Por que cada bloco existe:</h4>
+<ul>
+  <li><strong>[Pedido]:</strong> Define estilo-alvo. "Tracos levemente de cartoon com texturas" = meio-termo estilizado.</li>
+  <li><strong>[Descricao da cena]:</strong> Acao e posicao exatas. Sem isso, a IA decide sozinha.</li>
+  <li><strong>[Composicao]:</strong> Regra dos tercos, proporcao aurea — eleva qualidade visual.</li>
+  <li><strong>[Iluminacao]:</strong> "Lado da sombra, como documentario" — contraste e dramaticidade.</li>
+  <li><strong>[Consistencia]:</strong> Manter personagem igual, mudando apenas acao/pose.</li>
+  <li><strong>[Mais realismo]:</strong> Texturas, poros, imperfeicoes — tira a "cara de IA".</li>
+  <li><strong>[Camera]:</strong> f1.8 = fundo desfocado. Aberracao cromatica = visual de camera real.</li>
+</ul>
+
+<h3>Metodo 3: Misturar Referencias — O Mais Criativo</h3>
+
+<p>Combine 3 elementos de referencias visuais DIFERENTES:</p>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-num">1</div>
+    <div class="card-title">Estilo de Personagem</div>
+    <div class="card-desc">Estilo visual de um personagem existente (ex: estilo Pixar de um chef do Ratatouille)</div>
+  </div>
+  <div class="card">
+    <div class="card-num">2</div>
+    <div class="card-title">Roupa</div>
+    <div class="card-desc">Roupa de outra referencia completamente diferente (ex: ilustracao 2D de um pescador)</div>
+  </div>
+  <div class="card">
+    <div class="card-num">3</div>
+    <div class="card-title">Estilo do Universo</div>
+    <div class="card-desc">Universo visual de uma terceira referencia (ex: cidade steampunk coberta de plantas)</div>
+  </div>
+</div>
+
+<div class="tip">
+  <div class="tip-label">&#9989; Por Que Funciona</div>
+  <p style="margin:0">Ao combinar elementos que normalmente nao aparecem juntos, voce cria algo que se destaca automaticamente. Aplicacao pratica de "misture referencias de fora do seu nicho".</p>
+</div>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Tente 2 dos 3 metodos: (A) Esboco simples no papel → gerar 3D. (B) Foto de personagem famoso → converter pra animacao 3D com o prompt do Metodo 2. Compare qual deu mais controle.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 9 ========== -->
+<section id="mod9">
+<h2>Modulo 9: Estilos de Animacao</h2>
+<h3>&#127912; Escolha Um Estilo Com Personalidade</h3>
+
+<blockquote>"Evite estilo generico." Se voce nao define, a IA vai pro default — clean, polido, sem personalidade, igual ao de todo mundo.</blockquote>
+
+<div class="style-cards">
+  <div class="style-card">
+    <div class="style-emoji">&#129527;</div>
+    <div class="style-name">Boneco de Feltro</div>
+    <div class="style-desc">Visual de stop motion com textura de feltro/la. Costuras visiveis, imperfeicoes de craft. Charme nostalgico como Coraline ou Fantastic Mr. Fox. Otimo pra conteudo emocional e storytelling.</div>
+  </div>
+  <div class="style-card">
+    <div class="style-emoji">&#127916;</div>
+    <div class="style-name">3D Cinematografico [Realista]</div>
+    <div class="style-desc">O mais "profissional". Personagens hiper-detalhados — poros, pelos, fibras de roupa, reflexos de luz. Iluminacao cinematografica complexa. Cara de Pixar/DreamWorks, mas com toque mais realista e adulto.</div>
+  </div>
+  <div class="style-card">
+    <div class="style-emoji">&#127912;</div>
+    <div class="style-name">3D Estilizado [Mix 2D+3D]</div>
+    <div class="style-desc">Blend entre 3D e 2D. Volume e profundidade 3D com tracos, cores e texturas de ilustracao 2D. Look artistico e diferenciado — nem 3D puro nem 2D puro.</div>
+  </div>
+</div>
+
+<p>Outros estilos: cartoon estilizado, anime, claymation, papercraft, e muito mais. O importante e <strong>escolher com intencao</strong>.</p>
+
+<div class="compare">
+  <div class="compare-bad">
+    <div class="compare-label">&#9888; Erro Comum</div>
+    <p style="margin:0;font-size:.9rem">Nao definir estilo e deixar a IA decidir. Resultado: visual "clean generico" que todo mundo com IA gera.</p>
+  </div>
+  <div class="compare-good">
+    <div class="compare-label">&#9989; Certo</div>
+    <p style="margin:0;font-size:.9rem">Escolher estilo especifico e consistente desde o primeiro frame. Incluir no prompt: "estilo de boneco de feltro com costuras visiveis" ou "animacao 3D cinematografica com texturas realistas".</p>
+  </div>
+</div>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Escolha UMA mesma cena (ex: "um gato olhando pela janela na chuva") e gere em 3 estilos diferentes: feltro, 3D cinematografico, 3D estilizado. Compare como o estilo muda a emocao.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 10 — ENQUADRAMENTO ========== -->
+<section id="mod10">
+<h2>Modulo 10: Enquadramento</h2>
+<h3>&#127909; Os 9 Tipos de Shot</h3>
+
+<p>O enquadramento e a Camada 5 das 9 camadas. Cada tipo conta uma historia diferente e transmite emocao diferente.</p>
+
+<table class="shot-table">
+  <thead>
+    <tr><th>#</th><th>Tipo de Shot</th><th>Descricao</th><th>Transmite</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td><td><strong>Macro Shot</strong></td>
+      <td>Ultra close em detalhes extremos — textura da pele, gotas de agua, detalhes de objetos</td>
+      <td>Intimidade, atencao ao detalhe</td>
+    </tr>
+    <tr>
+      <td>2</td><td><strong>Extreme Long Shot</strong></td>
+      <td>Plano muito aberto, paisagem inteira, personagem pequeno no quadro</td>
+      <td>Solidao, imensidao, estabelece cenario</td>
+    </tr>
+    <tr>
+      <td>3</td><td><strong>Close-up Shot</strong></td>
+      <td>Rosto do personagem com expressao facial clara</td>
+      <td>Emocao intensa, conexao, empatia</td>
+    </tr>
+    <tr>
+      <td>4</td><td><strong>Side Profile Shot</strong></td>
+      <td>Camera de perfil lateral</td>
+      <td>Estetica cinematografica, contemplacao</td>
+    </tr>
+    <tr>
+      <td>5</td><td><strong>Extreme Close-up</strong></td>
+      <td>Foco em detalhe especifico — olho, mao, labios</td>
+      <td>Tensao extrema, destaca detalhe narrativo</td>
+    </tr>
+    <tr>
+      <td>6</td><td><strong>High Angle Shot</strong></td>
+      <td>Camera de cima pra baixo, olhando de cima</td>
+      <td>Vulnerabilidade, fragilidade, visao panoramica</td>
+    </tr>
+    <tr>
+      <td>7</td><td><strong>Low Angle Shot</strong></td>
+      <td>Camera de baixo pra cima, olhando de baixo</td>
+      <td>Poder, autoridade, heroismo, intimidacao</td>
+    </tr>
+    <tr>
+      <td>8</td><td><strong>Over the Shoulder</strong></td>
+      <td>Camera por cima do ombro, olhando pro outro personagem</td>
+      <td>Dialogo, interacao, espectador na cena</td>
+    </tr>
+    <tr>
+      <td>9</td><td><strong>Off-center Shot</strong></td>
+      <td>Personagem fora do centro do quadro (regra dos tercos)</td>
+      <td>Tensao visual, dinamismo, menos "posado"</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="tip">
+  <div class="tip-label">&#9989; Dica Pratica</div>
+  <p style="margin:0">Nao precisa usar todos em cada projeto, mas precisa CONHECER todos pra escolher conscientemente qual usar em cada momento da historia.</p>
+</div>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Escolha seu personagem e gere 4 imagens usando 4 enquadramentos diferentes (ex: close-up, extreme long shot, low angle, over the shoulder). Observe como o MESMO personagem conta historias completamente diferentes.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 11 ========== -->
+<section id="mod11">
+<h2>Modulo 11: Storytelling Visual</h2>
+<h3>&#128218; Contando Historia com Sequencia de Imagens</h3>
+
+<blockquote>"Sequencia de enquadramentos em ordem que ajuda a contar uma boa historia de forma mais eficiente."</blockquote>
+
+<p>Storytelling visual e a arte de planejar uma sequencia de imagens com variacao intencional de camera e enquadramento, de modo que a SEQUENCIA conte uma historia — nao apenas imagens individuais bonitas.</p>
+
+<p>E o conceito de storyboard aplicado a criacao com IA: antes de sair gerando, planeje QUAIS shots usar e EM QUE ORDEM.</p>
+
+<h3>Hack: Storytelling Visual Automatico</h3>
+
+<div class="compare">
+  <div class="compare-bad">
+    <div class="compare-label">&#9888; Jeito Comum</div>
+    <ul style="margin-left:16px;font-size:.9rem">
+      <li>Cria cada cena individualmente, uma por uma</li>
+      <li>Gera muitas imagens tentando acertar cada uma</li>
+      <li>Gasta mais creditos</li>
+      <li>Gasta mais tempo e energia mental</li>
+      <li>Resultado inconsistente entre cenas</li>
+    </ul>
+  </div>
+  <div class="compare-good">
+    <div class="compare-label">&#9989; Metodo do Workshop</div>
+    <ul style="margin-left:16px;font-size:.9rem">
+      <li>Cria variacao de 4 cenas de uma vez com prompt especifico</li>
+      <li>IA gera 4 enquadramentos diferentes automaticamente</li>
+      <li>Economiza creditos (1 geracao vs 4)</li>
+      <li>Resultado mais coeso (gerado junto)</li>
+      <li>Depois aplica Upscale no Nano Banana Pro</li>
+    </ul>
+  </div>
+</div>
+
+<div class="practice">
+  <div class="practice-label">&#128161; Na Pratica — Exercicio</div>
+  <p style="margin:0">Use o Prompt 2 (Storytelling Visual — 4 Imagens) do Banco de Prompts. Descreva uma mini-historia em 1-2 frases e gere as 4 imagens de uma vez. Analise: os enquadramentos fazem sentido? A coesao e boa?</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== MODULO 12 ========== -->
+<section id="mod12">
+<h2>Modulo 12: O Que Vem Depois</h2>
+<h3>&#128640; Previa dos Proximos Conteudos</h3>
+
+<div class="compare">
+  <div class="compare-good" style="border-color:var(--gold)">
+    <div class="compare-label" style="color:var(--gold)">&#127916; Sessao Pratica (Dia 1 — Tarde)</div>
+    <ul style="margin-left:16px;font-size:.9rem">
+      <li>Criacao do projeto 100% pratico</li>
+      <li><strong>Gerar todas as imagens</strong> — [Parte mais importante]</li>
+      <li>Storytelling visual na pratica</li>
+      <li>Upscale simplificado</li>
+      <li>Processos para melhorar o storytelling</li>
+    </ul>
+  </div>
+  <div class="compare-good" style="border-color:var(--gold)">
+    <div class="compare-label" style="color:var(--gold)">&#127909; Dia 2</div>
+    <ul style="margin-left:16px;font-size:.9rem">
+      <li>Continuacao do projeto pratico</li>
+      <li>Geracao de todos os videos</li>
+      <li>Segredo dos prompts para video</li>
+      <li>Melhores ferramentas (comparativo)</li>
+      <li>Edicao e finalizacao</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== BANCO DE PROMPTS ========== -->
+<section id="prompts">
+<h2>&#128203; Banco de Prompts (PromptBoss)</h2>
+<p>Todos os 5 prompts prontos do workshop. Adapte o conteudo entre colchetes pro seu projeto.</p>
+
+<!-- PROMPT 1 -->
+<h3>Prompt 1: Mude para Animacao 3D Detalhada</h3>
+<p style="color:var(--text-muted);font-size:.9rem"><strong>Quando usar:</strong> Quando voce tem uma imagem e quer converter para estilo de animacao 3D cinematografica.</p>
+
+<div class="prompt-block">
+  <div class="prompt-header">
+    <span>&#128203; Prompt 1 — Animacao 3D Detalhada</span>
+    <button class="copy-btn" onclick="copyPrompt(this)">&#128203; Copiar</button>
+  </div>
+  <pre>[Pedido] Mude para [Estilo de animação 3d de filme] traços levemente de cartoon
+mas com texturas e detalhes.
+
+[Melhorar composição] Com composições mais profissionais como de um diretor de
+fotografia: Regra dos terços, proporção áurea, bem como os filmes premiados.
+
+[Iluminação] A luz é realista e cinematográfica da luz de um amanhecer, sempre
+gravado do lado da sombra, como em um documentário
+
+[Consistência] Mantenha os personagens. Apenas mude a ação para posição que
+foi pedido.
+
+[Mais realismo] Quero texturas no personagem, poros na pele, leves imperfeições,
+textura na roupa desgaste, ferrugem nas partes de metal e brilhos realistas.
+
+[Melhorar estética de câmera] Lente cine f1.8 com aberração cromática</pre>
+</div>
+
+<div class="tip">
+  <div class="tip-label">&#128161; Dica</div>
+  <p style="margin:0">O bloco [Pedido] e o unico que voce precisa alterar entre usos. O resto funciona como "base de qualidade" consistente.</p>
+</div>
+
+<!-- PROMPT 2 -->
+<h3>Prompt 2: Storytelling Visual — 4 Imagens</h3>
+<p style="color:var(--text-muted);font-size:.9rem"><strong>Quando usar:</strong> Pra criar sequencia narrativa de 4 imagens com variacao de enquadramento.</p>
+
+<div class="prompt-block">
+  <div class="prompt-header">
+    <span>&#128203; Prompt 2 — Storytelling Visual</span>
+    <button class="copy-btn" onclick="copyPrompt(this)">&#128203; Copiar</button>
+  </div>
+  <pre>Crie 4 imagens verticais uma do lado da outra, contando uma historia com
+variação de enquadramentos.
+
+[Historia]
+
+Quero variação de enquadramentos, planos mais ricos como: plano geral, over
+the shoulder, planos macro, primeiro plano focado, primeiro plano desfocado.
+
+Sem alterar a cena. personagens devem estar no mesmo lugar.
+
+Com composições mais profissionais como de um diretor de fotografia: Regra dos
+terços, proporção áurea, bem como os filmes premiados. Mantenha os mesmos
+personagem.
+
+A luz é realista, sempre gravado do lado da sombra, como em um documentário.
+Mantenha o estilo da imagem de referência, como se tudo fosse parte de um
+mesmo filme. Quero texturas no personagem, detalhes na pele, leves
+imperfeições, textura na roupa e brilhos realistas. Lente 35mm f1.8 com
+aberração cromática</pre>
+</div>
+
+<div class="tip">
+  <div class="tip-label">&#128161; Dica</div>
+  <p style="margin:0">Substitua [Historia] pela descricao da cena. A IA gera 4 versoes com enquadramentos diferentes, economizando creditos e garantindo coesao.</p>
+</div>
+
+<!-- PROMPT 3 -->
+<h3>Prompt 3: Upscale Simplificado</h3>
+<p style="color:var(--text-muted);font-size:.9rem"><strong>Quando usar:</strong> Pra melhorar resolucao e detalhes sem alterar a composicao.</p>
+
+<div class="prompt-block">
+  <div class="prompt-header">
+    <span>&#128203; Prompt 3 — Upscale Simplificado</span>
+    <button class="copy-btn" onclick="copyPrompt(this)">&#128203; Copiar</button>
+  </div>
+  <pre>Recrie a imagem, em alta resolução, com detalhes e texturas reais,
+detalhamento do personagem mantendo a consistência da referencia, melhore a
+textura da roupa e do cenário. Mantenha a mesma composição, cenario e ação,
+melhorando apenas os detalhes pedidos. A luz é realista, sempre gravado do
+lado da sombra, como em um documentário. Lente cine f2.8 com aberração
+cromática</pre>
+</div>
+
+<div class="tip">
+  <div class="tip-label">&#128161; Dica</div>
+  <p style="margin:0">Lente f2.8 (nao f1.8). Mais profundidade de campo = mais elementos em foco, ideal pra upscale onde voce quer preservar detalhes do cenario.</p>
+</div>
+
+<!-- PROMPT 4 -->
+<h3>Prompt 4: Banco de Consistencia [Corpo]</h3>
+<p style="color:var(--text-muted);font-size:.9rem"><strong>Quando usar:</strong> Pra criar multiplas poses do mesmo personagem como referencia de consistencia.</p>
+
+<div class="prompt-block">
+  <div class="prompt-header">
+    <span>&#128203; Prompt 4 — Banco de Consistencia</span>
+    <button class="copy-btn" onclick="copyPrompt(this)">&#128203; Copiar</button>
+  </div>
+  <pre>Crie várias imagens do personagem, cada uma de corpo inteiro, de lado, de
+frente, de costas
+
+sempre um full body shot em todas imagens
+
+A luz é realista e cinematográfica da luz de um amanhecer, sempre gravado
+do lado da sombra, como em um documentário
+
+Mantenha os personagens, proporção e formatos bem fiéis, Apenas mude a ação
+para posição que foi pedido e estilo de animação 3d detalhado com texturas.
+
+Quero texturas no personagem, na pele, leves imperfeições, textura na roupa
+e brilhos realistas. Lente Câmera alexa com lente 35mm f1.8 com aberração
+cromática</pre>
+</div>
+
+<div class="tip">
+  <div class="tip-label">&#128161; Dica</div>
+  <p style="margin:0">"Camera Alexa com lente 35mm" = equipamento ARRI Alexa (cinema real). Gere frente, lado, costas e varias poses como referencia visual completa.</p>
+</div>
+
+<!-- PROMPT 5 -->
+<h3>Prompt 5: Ponte (Esboco → Estilo)</h3>
+<p style="color:var(--text-muted);font-size:.9rem"><strong>Quando usar:</strong> Pra converter imagem pra estilo de esboco/desenho a mao. Etapa intermediaria na tecnica de Ponte.</p>
+
+<div class="prompt-block">
+  <div class="prompt-header">
+    <span>&#128203; Prompt 5 — Ponte (Esboco)</span>
+    <button class="copy-btn" onclick="copyPrompt(this)">&#128203; Copiar</button>
+  </div>
+  <pre>Mude para estilo de um desenho feito a mão, no formato de esboço feito com
+caneta preta. O fundo do cenário pode ser detalhado, não precisa pintar.
+
+Seja fiel e consistente com as formas e proporções</pre>
+</div>
+
+<div class="tip">
+  <div class="tip-label">&#128161; Dica</div>
+  <p style="margin:0">Caminho inverso da Ponte — imagem → esboco. Util pra criar esboco de algo existente e usar como base de novo personagem.</p>
+</div>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== FERRAMENTAS ========== -->
+<section id="ferramentas">
+<h2>&#128295; Ferramentas Mencionadas</h2>
+
+<table class="tool-table">
+  <thead>
+    <tr><th>Ferramenta</th><th>Tipo</th><th>Uso no Pipeline</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>ChatGPT</strong></td><td>LLM (texto)</td><td>Planejamento, criacao de prompts, storytelling, refinamento</td></tr>
+    <tr><td><strong>Claude</strong></td><td>LLM (texto)</td><td>Planejamento, criacao de prompts, storytelling, refinamento</td></tr>
+    <tr><td><strong>Gemini</strong></td><td>LLM (texto)</td><td>Planejamento, criacao de prompts, storytelling, refinamento</td></tr>
+    <tr><td><strong>Midjourney</strong></td><td>Gerador de Imagem</td><td>Criar frames, personagens, cenarios — ferramenta principal</td></tr>
+    <tr><td><strong>Seadream 4k</strong></td><td>Gerador de Imagem</td><td>Criar imagens com alta resolucao</td></tr>
+    <tr><td><strong>Nano Banana Pro / Pro 2</strong></td><td>Gerador de Imagem</td><td>Criar imagens e fazer upscale</td></tr>
+    <tr><td><strong>Kling 2.6 / 3.0</strong></td><td>Gerador de Video</td><td>Transformar imagens em videos animados</td></tr>
+    <tr><td><strong>Veo 3.1</strong></td><td>Gerador de Video</td><td>Transformar imagens em videos animados</td></tr>
+    <tr><td><strong>Suno v5</strong></td><td>Musica</td><td>Criar trilhas sonoras originais</td></tr>
+  </tbody>
+</table>
+</section>
+
+<div class="scene-divider">&#127916;</div>
+
+<!-- ========== LINKS ========== -->
+<section id="links">
+<h2>&#128279; Links e Recursos</h2>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-title">&#127912; Slides Figma (Dia 1)</div>
+    <div class="card-desc"><a href="https://www.figma.com/deck/bEYstc5c8yNgfXAu4lFJFK/IA-MAKER-4---Dia-1" target="_blank">Abrir no Figma</a></div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#128203; PromptBoss</div>
+    <div class="card-desc"><a href="https://promptboss.ofilmboss.com/view/4f83787aa2ff37f5" target="_blank">Abrir Banco de Prompts</a></div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#128444; Imagens de Exercicio</div>
+    <div class="card-desc"><a href="https://drive.google.com/drive/folders/1Bnm6Vb2Nzm4JYxWKWf8g5mk35KpovALk" target="_blank">Abrir no Drive</a></div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#9989; Resultados dos Exercicios</div>
+    <div class="card-desc"><a href="https://drive.google.com/drive/folders/1tp4G2qpkzgF0iEfSYdW6CRe05p74_r91" target="_blank">Abrir no Drive</a></div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#128196; PDF de Apoio</div>
+    <div class="card-desc"><a href="https://drive.google.com/file/d/1zSfkF8q7x3MOk4wzGwGjEiQIV6cTAstu/view" target="_blank">Abrir PDF</a></div>
+  </div>
+</div>
+
+<h3 style="margin-top:40px">&#128172; Frases-Chave do Workshop</h3>
+
+<div class="card-grid">
+  <div class="card" style="border-left:3px solid var(--accent)">
+    <div class="card-desc" style="font-style:italic">"#TenhaCriterio" — nao aceite resultado mediocre</div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--accent)">
+    <div class="card-desc" style="font-style:italic">"Objetivo e sempre ficar o mais proximo do limite da IA"</div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--accent)">
+    <div class="card-desc" style="font-style:italic">"Saia da gaiola e aumente o seu repertorio"</div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--accent)">
+    <div class="card-desc" style="font-style:italic">"Processos claros mudam o jogo"</div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--accent)">
+    <div class="card-desc" style="font-style:italic">"Evite estilo generico"</div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--accent)">
+    <div class="card-desc" style="font-style:italic">"Sempre gravado do lado da sombra, como em um documentario"</div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--accent)">
+    <div class="card-desc" style="font-style:italic">"Isso e oportunidade de negocio!"</div>
+  </div>
+</div>
+</section>
+
+</main>
+
+<footer>
+  <p>Conteudo baseado no Workshop <strong>IA MAKER 4 — Dia 1</strong> por <strong>@ofilmboss</strong> / IA BOSS (Filmboss)</p>
+  <p style="margin-top:8px;opacity:.6">Tutorial criado para estudo pessoal</p>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+// Theme toggle
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  const isLight = document.body.classList.contains('light-mode');
+  document.getElementById('theme-icon').innerHTML = isLight ? '&#9728;' : '&#9790;';
+  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+if (localStorage.getItem('theme') === 'light') toggleTheme();
+
+// Sidebar toggle (mobile)
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.querySelector('.sidebar-overlay').classList.toggle('show');
+}
+document.querySelectorAll('aside nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 768) toggleSidebar();
+  });
+});
+
+// Active section tracking
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('aside nav a');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`aside nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => obs.observe(s));
+
+// Copy prompt
+function copyPrompt(btn) {
+  const pre = btn.closest('.prompt-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = '\u2705 Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = '&#128203; Copiar';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Accordion
+function toggleAccordion(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('show');
+}
+</script>
+
+</body>
+</html>
